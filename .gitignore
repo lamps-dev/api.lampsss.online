@@ -4,7 +4,7 @@ npm-debug.log
 
 # Environment variables
 .env
-firebase-admin.json
+firebase_admin.json
 
 # Logs
 logs/
