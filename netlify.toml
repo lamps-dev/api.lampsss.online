@@ -5,3 +5,8 @@
 [dev]
   framework = "#custom"
   command = "netlify dev"
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server"
+  status = 200
