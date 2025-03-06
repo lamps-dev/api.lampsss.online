@@ -1,0 +1,7 @@
+[build]
+  command = "npm install"
+  functions = "api"
+
+[dev]
+  framework = "#custom"
+  command = "netlify dev"
