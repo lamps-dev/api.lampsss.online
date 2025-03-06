@@ -1,12 +1,8 @@
 [build]
-  command = "echo $FIREBASE_ADMIN_JSON | base64 --decode > firebase_admin.json && npm install && npm run build && npm run start"
+  command = "echo $FIREBASE_ADMIN_JSON | base64 --decode > firebase_admin.json && npm install && npm run build"
   functions = "api"
 
-[dev]
-  framework = "#custom"
-  command = "netlify dev"
-
 [[redirects]]
-  from = "/*"
+  from = "/api/*"
   to = "/.netlify/functions/server"
   status = 200
