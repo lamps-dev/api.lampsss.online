@@ -5,18 +5,26 @@ const admin = require("firebase-admin");
 const WebSocket = require("ws");
 const fs = require("fs");
 
-// Check if the file exists before loading
-if (fs.existsSync("firebase_admin.json")) {
-    admin.initializeApp({
-        credential: admin.credential.cert(require("./firebase_admin.json"))
-    });
-} else {
-    console.error("firebase_admin.json is missing!");
+// ✅ Ensure firebase_admin.json is created at runtime
+if (!fs.existsSync("firebase_admin.json")) {
+    console.log("Creating firebase_admin.json from environment variable...");
+    const firebaseAdminJsonBase64 = process.env.FIREBASE_ADMIN_JSON;
+    if (!firebaseAdminJsonBase64) {
+        console.error("FIREBASE_ADMIN_JSON environment variable is missing!");
+        process.exit(1);
+    }
+    const firebaseAdminJson = Buffer.from(firebaseAdminJsonBase64, "base64").toString("utf-8");
+    fs.writeFileSync("firebase_admin.json", firebaseAdminJson);
 }
+
+// ✅ Initialize Firebase
+admin.initializeApp({
+    credential: admin.credential.cert(require("./firebase_admin.json"))
+});
+console.log("🔥 Firebase initialized successfully!");
 
 const db = admin.firestore();
 const app = express();
-const PORT = 3001;
 
 app.use(express.json());
 
@@ -58,14 +66,5 @@ wss.on("connection", ws => {
   });
 });
 
-const server = app.listen(PORT, () => {
-  console.log(`API running on port ${PORT}`);
-});
-
-server.on("upgrade", (request, socket, head) => {
-  wss.handleUpgrade(request, socket, head, ws => {
-    wss.emit("connection", ws, request);
-  });
-});
-
+// ✅ Netlify Serverless Setup (DO NOT USE app.listen)
 module.exports.handler = serverless(app);
