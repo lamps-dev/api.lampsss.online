@@ -5,9 +5,14 @@ const admin = require("firebase-admin");
 const WebSocket = require("ws");
 const fs = require("fs");
 
-admin.initializeApp({
-  credential: admin.credential.cert(require(process.env.FIREBASE_ADMIN_CREDENTIALS))
-});
+// Check if the file exists before loading
+if (fs.existsSync("firebase_admin.json")) {
+    admin.initializeApp({
+        credential: admin.credential.cert(require("./firebase_admin.json"))
+    });
+} else {
+    console.error("firebase_admin.json is missing!");
+}
 
 const db = admin.firestore();
 const app = express();

@@ -1,5 +1,5 @@
 [build]
-  command = "npm install"
+  command = "echo $FIREBASE_ADMIN_JSON | base64 --decode > firebase_admin.json && npm run build"
   functions = "api"
 
 [dev]
