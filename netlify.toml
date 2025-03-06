@@ -1,5 +1,5 @@
 [build]
-  command = "echo $FIREBASE_ADMIN_JSON | base64 --decode > firebase_admin.json"
+  command = "echo $FIREBASE_ADMIN_JSON | base64 --decode > firebase_admin.json && npm run build"
   functions = "api"
 
 [dev]
